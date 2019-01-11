@@ -76,16 +76,7 @@ export class Server {
                 break;
 
             case SocketEvents.StarCollected:
-                const playerTeam = this.gameController.Players[data.socket.id].Team;
-                const scores = this.gameController.Scores;
-                if (playerTeam === Team.red) {
-                    scores.red += 10;
-                } else {
-                    scores.blue += 10;
-                }
-                this.gameController.updateScores(scores);
-
-                console.log("Scores update", scores);
+                this.gameController.starCollected(data.socket.id);
                 break;
 
             default:

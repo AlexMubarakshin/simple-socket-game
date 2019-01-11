@@ -5,7 +5,6 @@ const path = require("path");
 const http_1 = require("http");
 const SocketServer_1 = require("./SocketServer");
 const GameController_1 = require("./GameController");
-const team_1 = require("./model/team");
 class Server {
     constructor(port) {
         this.start = () => {
@@ -43,16 +42,7 @@ class Server {
                     data.socket.broadcast.emit("playerMoved", playerId);
                     break;
                 case SocketServer_1.SocketEvents.StarCollected:
-                    const playerTeam = this.gameController.Players[data.socket.id].Team;
-                    const scores = this.gameController.Scores;
-                    if (playerTeam === team_1.Team.red) {
-                        scores.red += 10;
-                    }
-                    else {
-                        scores.blue += 10;
-                    }
-                    this.gameController.updateScores(scores);
-                    console.log("Scores update", scores);
+                    this.gameController.starCollected(data.socket.id);
                     break;
                 default:
                     break;

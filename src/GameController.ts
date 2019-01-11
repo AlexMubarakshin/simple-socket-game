@@ -22,10 +22,6 @@ export class GameController {
         };
     }
 
-    public updateScores(newScore: { red: number, blue: number }) {
-        this.scores = newScore;
-    }
-
     public spawnNewPlayer(playerID: string): Player {
         this.players[playerID] = new Player(playerID);
 

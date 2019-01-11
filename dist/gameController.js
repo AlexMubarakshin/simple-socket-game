@@ -15,9 +15,6 @@ class GameController {
             red: 0,
         };
     }
-    updateScores(newScore) {
-        this.scores = newScore;
-    }
     spawnNewPlayer(playerID) {
         this.players[playerID] = new Player_1.Player(playerID);
         return this.players[playerID];
