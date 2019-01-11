@@ -16,6 +16,7 @@ var SocketEvents;
 class SocketServer {
     constructor(httpServer) {
         this.socketIOServer = socketio(httpServer);
+        this.playerSockets = {};
     }
     subscribeAtAllSocketEvents(cb) {
         const listeners = {};
@@ -26,20 +27,17 @@ class SocketServer {
             }
         }
         this.socketIOServer.on(SocketEvents.Connection, (socket) => {
-            this.socket = socket;
-            listeners[SocketEvents.Connection]({ socketEvent: SocketEvents.Connection, socket: this.socket });
+            this.playerSockets[socket.id] = socket;
+            listeners[SocketEvents.Connection]({ socketEvent: SocketEvents.Connection, socket: this.playerSockets[socket.id] });
             for (let listenerName in listeners) {
                 if (listenerName !== SocketEvents.Connection) {
-                    this.socket.on(listenerName, (data) => listeners[listenerName]({ socketEvent: listenerName, data, socket }));
+                    this.playerSockets[socket.id].on(listenerName, (data) => listeners[listenerName]({ socketEvent: listenerName, data, socket }));
                 }
             }
         });
     }
-    socketEmit(eventName, data) {
-        this.socket.emit(eventName, data);
-    }
     broadcastEmit(eventName, data) {
-        this.socket.broadcast.emit(eventName, data);
+        this.playerSockets.broadcast.emit(eventName, data);
     }
     ioEmit(eventName, data) {
         this.socketIOServer.emit(eventName, data);

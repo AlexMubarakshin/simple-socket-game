@@ -21,14 +21,16 @@ export interface SocketListenerCallbackData {
 
 export class SocketServer {
     private socketIOServer: socketio.Server;
-    private socket: socketio.Socket;
+    private playerSockets: { [socketId: string]: socketio.Socket };
 
     constructor(httpServer: Server) {
         this.socketIOServer = socketio(httpServer);
+        this.playerSockets = {};
     }
 
     public subscribeAtAllSocketEvents(cb: (data: SocketListenerCallbackData) => void) {
         const listeners: { [key: string]: any } = {};
+
         for (let event in SocketEvents) {
             if (isNaN(Number(event))) {
                 const eventName = SocketEvents[event];
@@ -37,25 +39,22 @@ export class SocketServer {
         }
 
         this.socketIOServer.on(SocketEvents.Connection, (socket) => {
-            this.socket = socket;
+            this.playerSockets[socket.id] = socket;
 
-            listeners[SocketEvents.Connection]({socketEvent: SocketEvents.Connection, socket: this.socket});
+            listeners[SocketEvents.Connection]({ socketEvent: SocketEvents.Connection, socket: this.playerSockets[socket.id] });
 
             for (let listenerName in listeners) {
                 if (listenerName !== SocketEvents.Connection) {
-                    this.socket.on(listenerName, (data) => listeners[listenerName]({ socketEvent: listenerName, data, socket }))
+                    this.playerSockets[socket.id].on(listenerName, (data) => listeners[listenerName]({ socketEvent: listenerName, data, socket }))
                 }
             }
 
         });
     }
 
-    public socketEmit(eventName: string, data: any) {
-        this.socket.emit(eventName, data);
-    }
 
     public broadcastEmit(eventName: string, data: any) {
-        this.socket.broadcast.emit(eventName, data);
+        this.playerSockets.broadcast.emit(eventName, data);
     }
 
     public ioEmit(eventName: string, data: any) {

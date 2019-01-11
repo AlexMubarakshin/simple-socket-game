@@ -25,7 +25,7 @@ class Server {
                     data.socket.emit(SocketServer_1.SocketEvents.CurrentPlayers, players);
                     data.socket.emit(SocketServer_1.SocketEvents.StarLocation, gameController.StarPosition);
                     data.socket.emit(SocketServer_1.SocketEvents.ScoreUpdate, gameController.Scores);
-                    data.socket.broadcast.emit(SocketServer_1.SocketEvents.NewPlayer, data.socket.id);
+                    data.socket.broadcast.emit(SocketServer_1.SocketEvents.NewPlayer, players[data.socket.id].Info);
                     break;
                 case SocketServer_1.SocketEvents.Disconnect:
                     console.log("Player disconected", data.socket.id);
@@ -39,7 +39,7 @@ class Server {
                 case SocketServer_1.SocketEvents.PlayerMovement:
                     const playerId = data.socket.id;
                     this.gameController.updatePlayerPosition(data.socket.id, data.data.x, data.data.y, data.data.rotation);
-                    data.socket.broadcast.emit("playerMoved", playerId);
+                    data.socket.broadcast.emit("playerMoved", this.gameController.Players[playerId].Info);
                     break;
                 case SocketServer_1.SocketEvents.StarCollected:
                     this.gameController.starCollected(data.socket.id);

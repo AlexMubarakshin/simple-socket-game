@@ -54,7 +54,7 @@ export class Server {
                 data.socket.emit(SocketEvents.CurrentPlayers, players);
                 data.socket.emit(SocketEvents.StarLocation, gameController.StarPosition);
                 data.socket.emit(SocketEvents.ScoreUpdate, gameController.Scores);
-                data.socket.broadcast.emit(SocketEvents.NewPlayer, data.socket.id)
+                data.socket.broadcast.emit(SocketEvents.NewPlayer, players[data.socket.id].Info);
 
                 break;
 
@@ -72,7 +72,7 @@ export class Server {
             case SocketEvents.PlayerMovement:
                 const playerId = data.socket.id;
                 this.gameController.updatePlayerPosition(data.socket.id, data.data.x, data.data.y, data.data.rotation);
-                data.socket.broadcast.emit("playerMoved", playerId);
+                data.socket.broadcast.emit("playerMoved", this.gameController.Players[playerId].Info);
                 break;
 
             case SocketEvents.StarCollected:
