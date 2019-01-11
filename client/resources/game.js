@@ -73,6 +73,16 @@ function create() {
             this.socket.emit('starCollected');
         }, null, self);
     });
+
+    this.socket.on('chat-message', function (newMessage) {
+        const chat = document.getElementById('messages-field');
+        const messageElement = document.createElement('li');
+        messageElement.innerText = newMessage;
+        
+        chat.append(messageElement);
+    });
+
+    initChat(this.socket);
 }
 
 function addPlayer(self, playerInfo) {
@@ -96,6 +106,21 @@ function addOtherPlayers(self, playerInfo) {
     }
     otherPlayer.playerId = playerInfo.playerId;
     self.otherPlayers.add(otherPlayer);
+}
+
+function initChat(socket) {
+    const messageInput = document.getElementById('message-input');
+    const chatForm = document.getElementById('chat-input-form');
+
+    chatForm.onsubmit = function (e) {
+        e.preventDefault();
+
+        const message = messageInput.value;
+        if (message != '') {
+            messageInput.value = "";
+            socket.emit('chat-message', message);
+        }
+    }
 }
 
 function update() {
@@ -130,4 +155,5 @@ function update() {
             rotation: this.ship.rotation
         };
     }
+
 }
