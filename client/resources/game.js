@@ -21,7 +21,7 @@ var game = new Phaser.Game(config);
 
 function preload() {
     this.load.image('ship', 'resources/images/spaceShips_001.png');
-    this.load.image('otherPlayer', 'resources/images/spaceShips_001.png');
+    this.load.image('otherPlayer', 'resources/images/enemyBlack5.png');
     this.load.image('star', 'resources/images/star_gold.png');
 }
 

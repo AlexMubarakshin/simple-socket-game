@@ -37,7 +37,9 @@ class SocketServer {
         });
     }
     broadcastEmit(eventName, data) {
-        this.playerSockets.broadcast.emit(eventName, data);
+        for (const key in this.playerSockets) {
+            this.playerSockets[key].broadcast.emit(eventName, data);
+        }
     }
     ioEmit(eventName, data) {
         this.socketIOServer.emit(eventName, data);

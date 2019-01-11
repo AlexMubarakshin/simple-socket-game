@@ -33,7 +33,6 @@ export class GameController {
     }
 
     public starCollected(playerID: string) {
-
         if (this.players[playerID].Team === Team.red) {
             this.scores.red += 10;
         } else {

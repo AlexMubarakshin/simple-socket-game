@@ -54,7 +54,9 @@ export class SocketServer {
 
 
     public broadcastEmit(eventName: string, data: any) {
-        this.playerSockets.broadcast.emit(eventName, data);
+        for (const key in this.playerSockets) {
+            this.playerSockets[key].broadcast.emit(eventName, data);
+        }
     }
 
     public ioEmit(eventName: string, data: any) {

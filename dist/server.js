@@ -39,10 +39,13 @@ class Server {
                 case SocketServer_1.SocketEvents.PlayerMovement:
                     const playerId = data.socket.id;
                     this.gameController.updatePlayerPosition(data.socket.id, data.data.x, data.data.y, data.data.rotation);
-                    data.socket.broadcast.emit("playerMoved", this.gameController.Players[playerId].Info);
+                    // data.socket.broadcast.emit("playerMoved", this.gameController.Players[playerId].Info);
+                    this.socketServer.broadcastEmit("playerMoved", this.gameController.Players[playerId].Info);
                     break;
                 case SocketServer_1.SocketEvents.StarCollected:
                     this.gameController.starCollected(data.socket.id);
+                    this.socketServer.ioEmit(SocketServer_1.SocketEvents.StarLocation, this.gameController.StarPosition);
+                    this.socketServer.ioEmit(SocketServer_1.SocketEvents.ScoreUpdate, this.gameController.Scores);
                     break;
                 default:
                     break;

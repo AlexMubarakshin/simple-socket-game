@@ -1,6 +1,6 @@
 # Simple socket game
 
-Client side based on Phaser.js and Socket.IO.
+Client side based on Phaser.js and Socket.IO.<br/>
 Server side based on Express framework, Socket.IO and written on Typescript.
 
 
